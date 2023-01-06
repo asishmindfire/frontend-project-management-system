@@ -1,0 +1,156 @@
+.cardinfo {
+  margin-top: 10px;
+  margin-bottom: 40px;
+  padding: 30px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 600px;
+}
+
+.cardinfo_box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cardinfo_box_title {
+  font-weight: bold;
+  font-size: 1.3rem;
+  display: flex;
+  gap: 10px;
+}
+
+.cardinfo_box_body {
+  width: fit-content;
+}
+
+.cardinfo_box_body input {
+  outline: none;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.cardinfo_box_colors {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.cardinfo_box_colors li {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  list-style: none;
+  border: 3px solid transparent;
+  transition: 200ms;
+}
+
+.cardinfo_box_colors .active {
+  border: 3px solid yellow;
+}
+
+.cardinfo_box_progress-bar {
+  height: 10px;
+  border-radius: 20px;
+  width: 100%;
+  border: 1px solid #ccc;
+  /* border: 1px solid red; */
+}
+
+.cardinfo_box_progress {
+  height: 10px;
+  border-radius: 20px;
+  width: 100%;
+  background-color: #1379ec;
+  /* background-color: yellow; */
+}
+
+.cardinfo_box_progress-active {
+  background-color: limegreen;
+  /* background-color: black; */
+}
+
+.cardinfo_box_list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cardinfo_task {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.cardinfo_task p {
+  flex: 1;
+  line-height: 20px;
+}
+
+.cardinfo_task input,
+.cardinfo_task svg {
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+}
+
+.trash {
+    display: flex;
+    justify-content: space-between;
+}
+
+.trash svg {
+    height: 16px;
+    width: 16px;
+    cursor: pointer;   
+}
+
+.cardinfo_box_labels {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dropdown {
+  width: 50%;
+  position: relative;
+  user-select: none;
+}
+
+.dropdown .dropdown-btn {
+  padding: 10px;
+  background: #f8f8f8;
+  box-shadow: 3px 3px 10px 6px rgba(0, 0, 0, 0.08);
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.dropdown .dropdown-content {
+  position: absolute;
+  top: 110%;
+  padding: 10px;
+  background: #f8f8f8;
+  box-shadow: 3px 3px 10px 6px rgba(0, 0, 0, 0.08);
+  font-weight: 500;
+  color: #333;
+  width: 100%;
+}
+
+.dropdown .dropdown-content .dropdown-items {
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dropdown .dropdown-content .dropdown-items:hover {
+  background: #ede9e9;
+}

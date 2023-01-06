@@ -247,7 +247,7 @@
           .nav-link {
             @extend .d-flex;
             .nav-profile-img {
-              position: relative;
+              // position: relative;
               width: 32px;
               height: 32px;
               img {
@@ -256,7 +256,7 @@
                 border-radius: 100%;
               }
               .availability-status {
-                position: absolute;
+                // position: absolute;
                 width: 10px;
                 height: 10px;
                 border-radius: 100%;

@@ -193,7 +193,7 @@
         .nav-link {
           color: $sidebar-light-submenu-color;
           padding: $sidebar-submenu-item-padding;
-          position: relative;
+          // position: relative;
           font-size: $sidebar-submenu-font-size;
           line-height: 1;
           height: auto;
@@ -202,7 +202,7 @@
             content: "\F054";
             font-family: "Material Design Icons";
             display: block;
-            position: absolute;
+            // position: absolute;
             left:0px;
             .rtl & {
               left: auto;

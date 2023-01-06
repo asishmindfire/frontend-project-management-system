@@ -38370,7 +38370,7 @@ svg {
 .sidebar .nav.sub-menu .nav-item .nav-link {
   color: #888;
   padding: 0.75rem 2rem;
-  position: relative;
+  /* position: relative; */
   font-size: 0.8125rem;
   line-height: 1;
   height: auto;
@@ -38380,7 +38380,7 @@ svg {
   content: "\F054";
   font-family: Material Design Icons;
   display: block;
-  position: absolute;
+  /* position: absolute; */
   left: 0;
   top: 50%;
   -webkit-transform: translateY(-50%);
@@ -38462,7 +38462,7 @@ svg {
     justify-content: center;
     flex-direction: column-reverse;
     text-align: center;
-    position: relative;
+    /* position: relative; */
     border-bottom: none;
   }
   .sidebar-mini .sidebar .nav .nav-item .nav-link .menu-title {
@@ -38484,7 +38484,7 @@ svg {
   .sidebar-mini .sidebar .nav .nav-item .nav-link i.menu-arrow {
     display: inline-block;
     margin-left: 5px;
-    position: absolute;
+    /* position: absolute; */
     top: 50%;
     right: 10px;
     -webkit-transform: translateY(-50%);
