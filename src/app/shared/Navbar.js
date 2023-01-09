@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import { Dropdown } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import { Dropdown } from "react-bootstrap";
+import { Link } from "react-router-dom";
 // import { Trans } from 'react-i18next';
+import service from "../Api";
 
 class Navbar extends Component {
   logout(evt) {
@@ -9,21 +10,59 @@ class Navbar extends Component {
     localStorage.removeItem("usertoken");
     localStorage.removeItem("userrole");
   }
+
+  state = { username: "" };
+
   toggleOffcanvas() {
-    document.querySelector('.sidebar-offcanvas').classList.toggle('active');
+    document.querySelector(".sidebar-offcanvas").classList.toggle("active");
   }
   toggleRightSidebar() {
-    document.querySelector('.right-sidebar').classList.toggle('open');
+    document.querySelector(".right-sidebar").classList.toggle("open");
   }
-  render () {
+
+  componentDidMount() {
+    service
+      .getUserDetails()
+      .then((res) => {
+        if (res.data.status === 1) {
+          console.log("res.data", res.data.data.user_name);
+          this.setState({ username: res.data.data.user_name });
+        } else {
+          console.log(`Error in fetch profile =>`, res.data);
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(`Error in fetch profile =>`, err);
+        alert(err.message);
+      });
+  }
+
+  render() {
     return (
       <nav className="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-          <Link className="navbar-brand brand-logo" to="/"><img src={require('../../assets/images/logo.svg')} alt="logo" /></Link>
-          <Link className="navbar-brand brand-logo-mini" to="/"><img src={require('../../assets/images/logo-mini.svg')} alt="logo" /></Link>
+          <Link className="navbar-brand brand-logo" to="/">
+            {/* <img src={require("../../assets/images/logo.svg")} alt="logo" /> */}
+            <img
+              src={require("../../assets/images/download.jpg")}
+              alt="logo"
+              style={{ width: "58%", height: "60px", aspectRatio: 3/2, objectFit: "contain", mixBlendMode: "" }}
+            />
+          </Link>
+          <Link className="navbar-brand brand-logo-mini" to="/">
+            <img
+              src={require("../../assets/images/logo-mini.svg")}
+              alt="logo"
+            />
+          </Link>
         </div>
         <div className="navbar-menu-wrapper d-flex align-items-stretch">
-          <button className="navbar-toggler navbar-toggler align-self-center" type="button" onClick={ () => document.body.classList.toggle('sidebar-icon-only') }>
+          <button
+            className="navbar-toggler navbar-toggler align-self-center"
+            type="button"
+            onClick={() => document.body.classList.toggle("sidebar-icon-only")}
+          >
             <span className="mdi mdi-menu"></span>
           </button>
           <div className="search-field d-none d-md-block">
@@ -32,7 +71,11 @@ class Navbar extends Component {
                 <div className="input-group-prepend bg-transparent">
                   <i className="input-group-text border-0 mdi mdi-magnify"></i>
                 </div>
-                <input type="text" className="form-control bg-transparent border-0" placeholder="Search projects"/>
+                <input
+                  type="text"
+                  className="form-control bg-transparent border-0"
+                  placeholder="Search projects"
+                />
               </div>
             </form>
           </div>
@@ -41,11 +84,14 @@ class Navbar extends Component {
               <Dropdown alignRight>
                 <Dropdown.Toggle className="nav-link">
                   <div className="nav-profile-img">
-                    <img src={require("../../assets/images/faces/face1.jpg")} alt="user"/>
+                    <img
+                      src={require("../../assets/images/faces/face1.jpg")}
+                      alt="user"
+                    />
                     <span className="availability-status online"></span>
                   </div>
                   <div className="nav-profile-text">
-                    <p className="mb-1 text-black">""David Greymaax</p>
+                    <p className="mb-1 text-black">{this.state.username}</p>
                   </div>
                 </Dropdown.Toggle>
 
@@ -54,7 +100,10 @@ class Navbar extends Component {
                     <i className="mdi mdi-cached mr-2 text-success"></i>
                     ""Activity Log
                   </Dropdown.Item> */}
-                  <Dropdown.Item href="/user-pages/login-1" onClick={this.logOut}>
+                  <Dropdown.Item
+                    href="/user-pages/login-1"
+                    onClick={this.logOut}
+                  >
                     <i className="mdi mdi-logout mr-2 text-primary"></i>
                     Signout
                   </Dropdown.Item>
@@ -177,7 +226,11 @@ class Navbar extends Component {
               </button>
             </li> */}
           </ul>
-          <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" onClick={this.toggleOffcanvas}>
+          <button
+            className="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
+            type="button"
+            onClick={this.toggleOffcanvas}
+          >
             <span className="mdi mdi-menu"></span>
           </button>
         </div>

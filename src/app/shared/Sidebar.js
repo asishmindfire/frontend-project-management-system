@@ -8,9 +8,10 @@ import { Link, withRouter } from "react-router-dom";
 import service from "../Api";
 
 class Sidebar extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
+      username: "",
       showDropdown: false,
       project: {
         projectId: 0,
@@ -25,29 +26,11 @@ class Sidebar extends Component {
 
   handleOnSubmit() {
     console.log(`======>`, this.state.project);
+
     service
-      .getUserDetails()
+      .addProject(this.state.project)
       .then((res) => {
         if (res.data.status === 1) {
-          this.setState({
-            project: {
-              ...this.state.project,
-              created_by: res.data.data.user_id,
-            },
-          });
-          service
-            .addProject(this.state.project)
-            .then((res) => {
-              if (res.data.status === 1) {
-              } else {
-                console.log(`Error in fetch profile =>`, res.data);
-                alert(res.data.message);
-              }
-            })
-            .catch((err) => {
-              console.log(`Error in fetch profile =>`, err);
-              alert(err.message);
-            });
         } else {
           console.log(`Error in fetch profile =>`, res.data);
           alert(res.data.message);
@@ -65,54 +48,93 @@ class Sidebar extends Component {
     });
   }
 
-  toggleMenuState(menuState) {
-    if (this.state[menuState]) {
-      this.setState({ [menuState]: false });
-    } else if (Object.keys(this.state).length === 0) {
-      this.setState({ [menuState]: true });
-    } else {
-      Object.keys(this.state).forEach((i) => {
-        this.setState({ [i]: false });
+  componentDidMount() {
+    service
+      .getUserDetails()
+      .then((res) => {
+        if (res.data.status === 1) {
+          console.log("res.data", res.data.data.user_name);
+          this.setState({
+            project: {
+              ...this.state.project,
+              created_by: res.data.data.user_id,
+            },
+          });
+          this.setState({ username: res.data.data.user_name });
+          // this.onRouteChanged();
+          // add class 'hover-open' to sidebar navitem while hover in sidebar-icon-only menu
+          const body = document.querySelector("body");
+          document.querySelectorAll(".sidebar .nav-item").forEach((el) => {
+            el.addEventListener("mouseover", function () {
+              if (body.classList.contains("sidebar-icon-only")) {
+                el.classList.add("hover-open");
+              }
+            });
+            el.addEventListener("mouseout", function () {
+              if (body.classList.contains("sidebar-icon-only")) {
+                el.classList.remove("hover-open");
+              }
+            });
+          });
+        } else {
+          console.log(`Error in fetch profile =>`, res.data);
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(`Error in fetch profile =>`, err);
+        alert(err.message);
       });
-      this.setState({ [menuState]: true });
-    }
   }
 
-  componentDidUpdate(prevProps) {
-    // console.log("componentDidUpdate");
-    if (this.props.location !== prevProps.location) {
-      this.onRouteChanged();
-    }
-  }
+  // toggleMenuState(menuState) {
+  //   if (this.state[menuState]) {
+  //     this.setState({ [menuState]: false });
+  //   } else if (Object.keys(this.state).length === 0) {
+  //     this.setState({ [menuState]: true });
+  //   } else {
+  //     Object.keys(this.state).forEach((i) => {
+  //       this.setState({ [i]: false });
+  //     });
+  //     this.setState({ [menuState]: true });
+  //   }
+  // }
 
-  onRouteChanged() {
+  // componentDidUpdate(prevProps) {
+  //   // console.log("componentDidUpdate");
+  //   if (this.props.location !== prevProps.location) {
+  //     // this.onRouteChanged();
+  //   }
+  // }
+
+  // onRouteChanged() {
     // console.log("onRouteChanged");
-    document.querySelector("#sidebar").classList.remove("active");
-    Object.keys(this.state).forEach((i) => {
-      this.setState({ [i]: false });
-    });
+    // document.querySelector("#sidebar").classList.remove("active");
+    // Object.keys(this.state).forEach((i) => {
+    //   this.setState({ [i]: false });
+    // });
 
-    const dropdownPaths = [
-      { path: "/apps", state: "appsMenuOpen" },
-      { path: "/basic-ui", state: "basicUiMenuOpen" },
-      { path: "/advanced-ui", state: "advancedUiMenuOpen" },
-      { path: "/form-elements", state: "formElementsMenuOpen" },
-      { path: "/tables", state: "tablesMenuOpen" },
-      { path: "/maps", state: "mapsMenuOpen" },
-      { path: "/icons", state: "iconsMenuOpen" },
-      { path: "/charts", state: "chartsMenuOpen" },
-      { path: "/user-pages", state: "userPagesMenuOpen" },
-      { path: "/error-pages", state: "errorPagesMenuOpen" },
-      { path: "/general-pages", state: "generalPagesMenuOpen" },
-      { path: "/ecommerce", state: "ecommercePagesMenuOpen" },
-    ];
+    // const dropdownPaths = [
+    //   { path: "/apps", state: "appsMenuOpen" },
+    //   { path: "/basic-ui", state: "basicUiMenuOpen" },
+    //   { path: "/advanced-ui", state: "advancedUiMenuOpen" },
+    //   { path: "/form-elements", state: "formElementsMenuOpen" },
+    //   { path: "/tables", state: "tablesMenuOpen" },
+    //   { path: "/maps", state: "mapsMenuOpen" },
+    //   { path: "/icons", state: "iconsMenuOpen" },
+    //   { path: "/charts", state: "chartsMenuOpen" },
+    //   { path: "/user-pages", state: "userPagesMenuOpen" },
+    //   { path: "/error-pages", state: "errorPagesMenuOpen" },
+    //   { path: "/general-pages", state: "generalPagesMenuOpen" },
+    //   { path: "/ecommerce", state: "ecommercePagesMenuOpen" },
+    // ];
 
-    dropdownPaths.forEach((obj) => {
-      if (this.isPathActive(obj.path)) {
-        this.setState({ [obj.state]: true });
-      }
-    });
-  }
+    // dropdownPaths.forEach((obj) => {
+    //   if (this.isPathActive(obj.path)) {
+    //     this.setState({ [obj.state]: true });
+    //   }
+    // });
+  // }
 
   render() {
     return (
@@ -123,18 +145,20 @@ class Sidebar extends Component {
               <a
                 href="!#"
                 className="nav-link"
-                onClick={(evt) => evt.preventDefault()}
+                // onClick={(evt) => evt.preventDefault()}
               >
                 <div className="nav-profile-image">
                   <img
                     src={require("../../assets/images/faces/face1.jpg")}
                     alt="profile"
                   />
-                  <span className="login-status online"></span>{" "}
+                  <span className="login-status online"></span>
                   {/* change to offline or busy as needed */}
                 </div>
                 <div className="nav-profile-text">
-                  <span className="font-weight-bold mb-2">David Grey. H</span>
+                  <span className="font-weight-bold mb-2">
+                    {this.state.username}
+                  </span>
                   <span className="text-secondary text-small">
                     Project Manager
                   </span>
@@ -150,121 +174,12 @@ class Sidebar extends Component {
                   <Plus
                     data-bs-toggle="modal" // Remove -bs
                     data-bs-target="#addTicketModal" // Remove -bs
-                    // onClick={(e) => e.preventDefault()}
+                    onClick={(e) => e.preventDefault()}
                     style={{ marginLeft: "90px" }}
                   />
                 </Link>
               </div>
             </li>
-
-            {/* <li className={ this.isPathActive('/basic-ui') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.basicUiMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('basicUiMenuOpen') } data-toggle="collapse">
-              <span className="menu-title">Projects</span>
-              <i className="menu-arrow"></i>
-              <i className="mdi mdi-crosshairs-gps menu-icon"></i>
-            </div>
-            <Collapse in={ this.state.basicUiMenuOpen }>
-              <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/basic-ui/buttons') ? 'nav-link active' : 'nav-link' } to="/basic-ui/buttons">""Buttons</Trans></Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/basic-ui/dropdowns') ? 'nav-link active' : 'nav-link' } to="/basic-ui/dropdowns">""Dropdowns</Trans></Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/basic-ui/typography') ? 'nav-link active' : 'nav-link' } to="/basic-ui/typography">""Typography</Trans></Link></li>
-              </ul>
-            </Collapse>
-          </li> */}
-
-            {/* <li className={ this.isPathActive('/form-elements') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.formElementsMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('formElementsMenuOpen') } data-toggle="collapse">
-              <span className="menu-title">""Form Elements</Trans></span>
-              <i className="menu-arrow"></i>
-              <i className="mdi mdi-format-list-bulleted menu-icon"></i>
-            </div>
-            <Collapse in={ this.state.formElementsMenuOpen }>
-              <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/form-elements/basic-elements') ? 'nav-link active' : 'nav-link' } to="/form-elements/basic-elements">""Basic Elements</Trans></Link></li>
-              </ul>
-            </Collapse>
-          </li> */}
-            {/* <li className={ this.isPathActive('/tables') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.tablesMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('tablesMenuOpen') } data-toggle="collapse">
-              <span className="menu-title">""Tables</Trans></span>
-              <i className="menu-arrow"></i>
-              <i className="mdi mdi-table-large menu-icon"></i>
-            </div>
-            <Collapse in={ this.state.tablesMenuOpen }>
-              <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/tables/basic-table') ? 'nav-link active' : 'nav-link' } to="/tables/basic-table">""Basic Table</Trans></Link></li>
-              </ul>
-            </Collapse>
-          </li> */}
-            {/* <li className={ this.isPathActive('/icons') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.iconsMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('iconsMenuOpen') } data-toggle="collapse">
-              <span className="menu-title">""Icons</Trans></span>
-              <i className="menu-arrow"></i>
-              <i className="mdi mdi-contacts menu-icon"></i>
-            </div>
-            <Collapse in={ this.state.iconsMenuOpen }>
-              <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/icons/mdi') ? 'nav-link active' : 'nav-link' } to="/icons/mdi">""Material</Trans></Link></li>
-              </ul>
-            </Collapse>
-          </li> */}
-            {/* <li className={ this.isPathActive('/charts') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.chartsMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('chartsMenuOpen') } data-toggle="collapse">
-              <span className="menu-title">""Charts</Trans></span>
-              <i className="menu-arrow"></i>
-              <i className="mdi mdi-chart-bar menu-icon"></i>
-            </div>
-            <Collapse in={ this.state.chartsMenuOpen }>
-              <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/charts/chart-js') ? 'nav-link active' : 'nav-link' } to="/charts/chart-js">""Chart Js</Trans></Link></li>
-              </ul>
-            </Collapse>
-          </li> */}
-            {/* <li className={ this.isPathActive('/user-pages') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.userPagesMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('userPagesMenuOpen') } data-toggle="collapse">
-              <span className="menu-title">""User Pages</Trans></span>
-              <i className="menu-arrow"></i>
-              <i className="mdi mdi-lock menu-icon"></i>
-            </div>
-            <Collapse in={ this.state.userPagesMenuOpen }>
-              <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/user-pages/login-1') ? 'nav-link active' : 'nav-link' } to="/user-pages/login-1">""Login</Trans></Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/user-pages/register-1') ? 'nav-link active' : 'nav-link' } to="/user-pages/register-1">""Register</Trans></Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/user-pages/lockscreen') ? 'nav-link active' : 'nav-link' } to="/user-pages/lockscreen">""Lockscreen</Trans></Link></li>
-              </ul>
-            </Collapse>
-          </li> */}
-            {/* <li className={ this.isPathActive('/error-pages') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.errorPagesMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('errorPagesMenuOpen') } data-toggle="collapse">
-              <span className="menu-title">""Error Pages</Trans></span>
-              <i className="menu-arrow"></i>
-              <i className="mdi mdi-security menu-icon"></i>
-            </div>
-            <Collapse in={ this.state.errorPagesMenuOpen }>
-              <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/error-pages/error-404') ? 'nav-link active' : 'nav-link' } to="/error-pages/error-404">404</Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/error-pages/error-500') ? 'nav-link active' : 'nav-link' } to="/error-pages/error-500">500</Link></li>
-              </ul>
-            </Collapse>
-          </li> */}
-            {/* <li className={ this.isPathActive('/general-pages') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.generalPagesMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('generalPagesMenuOpen') } data-toggle="collapse">
-              <span className="menu-title">""General Pages</Trans></span>
-              <i className="menu-arrow"></i>
-              <i className="mdi mdi-medical-bag menu-icon"></i>
-            </div>
-            <Collapse in={ this.state.generalPagesMenuOpen }>
-              <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/general-pages/blank-page') ? 'nav-link active' : 'nav-link' } to="/general-pages/blank-page">""Blank Page</Trans></Link></li>
-              </ul>
-            </Collapse>
-          </li> */}
-            {/* <li className="nav-item">
-            <a className="nav-link" href="http://bootstrapdash.com/demo/purple-react-free/documentation/documentation.html" rel="noopener noreferrer" target="_blank">
-              <span className="menu-title">""Documentation</Trans></span>
-              <i className="mdi mdi-file-document-box menu-icon"></i>
-            </a>
-          </li> */}
           </ul>
         </nav>
 
@@ -305,7 +220,7 @@ class Sidebar extends Component {
                 </div>
                 <div className="mb-3">
                   <label htmlFor="message-text" className="col-form-label">
-                    Ticket Description:
+                    Project Description:
                   </label>
                   <textarea
                     className="form-control"
@@ -349,23 +264,6 @@ class Sidebar extends Component {
     // return false;
   }
 
-  componentDidMount() {
-    this.onRouteChanged();
-    // add class 'hover-open' to sidebar navitem while hover in sidebar-icon-only menu
-    const body = document.querySelector("body");
-    document.querySelectorAll(".sidebar .nav-item").forEach((el) => {
-      el.addEventListener("mouseover", function () {
-        if (body.classList.contains("sidebar-icon-only")) {
-          el.classList.add("hover-open");
-        }
-      });
-      el.addEventListener("mouseout", function () {
-        if (body.classList.contains("sidebar-icon-only")) {
-          el.classList.remove("hover-open");
-        }
-      });
-    });
-  }
 }
 
 export default withRouter(Sidebar);
